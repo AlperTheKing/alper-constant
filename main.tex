@@ -12,7 +12,7 @@
   pdftitle={Parity Rock-Paper-Scissors Games and the Alper Constant},
   pdfauthor={Alper Ferudun},
   pdfsubject={Unrefereed mathematical preprint},
-  pdfkeywords={Nash equilibrium, zero-sum game, asymptotic expansion, Alper constant}
+  pdfkeywords={Nash equilibrium, zero-sum game, asymptotic expansion, Alper constant, Alper function}
 }
 \newtheorem{theorem}{Theorem}[section]
 \newtheorem{lemma}[theorem]{Lemma}
@@ -20,6 +20,7 @@
 \newtheorem{proposition}[theorem]{Proposition}
 \newtheorem*{theoremA}{Theorem A}
 \newtheorem*{theoremB}{Theorem B}
+\newtheorem*{theoremC}{Theorem C}
 \theoremstyle{definition}
 \newtheorem{definition}[theorem]{Definition}
 \newtheorem{example}[theorem]{Example}
@@ -43,8 +44,8 @@ odd difference is won by the smaller number, a nonzero even difference is
 won by the larger number, and a win with the number $m$ pays $2m-h$, where
 $0\le h<2$ is fixed. For $h=1$ this is the game of Problem~1012 of
 Project Euler; for $h=0$ the payment is proportional to the winning
-number. For every $h$ outside an explicit countable set we prove that the
-game has a unique equilibrium, supported on $2k+1$ consecutive numbers
+number. For every $h$ outside an explicit countable set $\mathcal E$ we
+prove that the game has a unique equilibrium, supported on $2k+1$ consecutive numbers
 ending at $n$ or $n-1$, and we solve it in closed form. When the support
 ends at $n$, the probability $P(n)$ of the largest number is
 $\bigl((2k^2+1)R_k-2(k^2-1)\bigr)/\bigl(3(2k+1)\bigr)$ for an explicit
@@ -52,15 +53,20 @@ product $R_k$ that depends only on the largest payment; otherwise $P(n)=0$.
 The support
 widens at thresholds given by the zeros of these functions; for
 $h\in\{0,1\}$ the thresholds are cubic polynomials in $k$ for each parity. For
-$S_h(N)=\sum_{n=3}^{N}P(n)$ and $h\in\{0,1\}$ we prove
+$S_h(N)=\sum_{n=3}^{N}P(n)$ we prove
 $S_h(N)=(3/2)^{4/3}N^{1/3}-\tfrac14\log N-\Alp(h)-\tfrac32\tau(1-\tau)
-+O(N^{-1/3})$, where $\tau\in[0,1)$ is the relative position of $N$ in its
++O_h(N^{-1/3})$, where $\tau\in[0,1)$ is the relative position of $N$ in its
 block, and we determine the next term. The constant $\Alp(h)$ plays the
 role that Euler's constant plays for the harmonic series. We call
 $\Alp=\Alp(0)=1.7771799879\ldots$ the Alper constant, give a series and
 an integral representation, and certify $80$ decimal places of $\Alp$ and
 of $\Alp(1)=1.6464176534\ldots$ with interval arithmetic. No expression
-of either constant in classical constants was found.
+of either constant in classical constants was found. The Alper function
+$h\mapsto\Alp(h)$ is strictly increasing and convex between consecutive
+points of $\mathcal E$ and jumps down at each of them; it tends to
+$\Alp(1)$ as $h\to1^-$ and to $\Alp(0)$ as $h\to2^-$, and
+$\Alp(h+2)=\Alp(h)$ for $0\le h<2$, $h\notin\mathcal E$, when the
+games are extended to larger parameters.
 \end{abstract}
 
 \section{Introduction}
@@ -104,8 +110,10 @@ that its width grows by two at isolated values of $n$. Sampled ratios
 $S_0(N)/N^{1/3}$ approach their limit slowly: the ratio is $1.330$ at $N=10^3$ and
 $1.613$ at $N=10^5$, while its limit turns out to be
 $(3/2)^{4/3}\approx1.7171$. We prove the support and transition laws
-for every $h\notin\mathcal E$, and the asymptotic formulas for
-$h\in\{0,1\}$. The latter isolate the constant that governs the slow approach.
+for every $h\notin\mathcal E$, and the asymptotic formulas first for
+$h\in\{0,1\}$, where the thresholds are explicit polynomials, and then for
+every $h\notin\mathcal E$. They isolate the constant that governs the slow
+approach.
 
 Throughout, $\log$ is the natural logarithm, $\gamma$ is Euler's
 constant and $c_j=\binom{2j}{j}4^{-j}$. For $k\ge1$ and real $y$ put
@@ -183,21 +191,43 @@ Section~\ref{sec:constant} expresses both constants as rapidly computable
 series and as integral-series, and certifies that the values above are
 correctly rounded to $80$ decimal places.
 
+\emph{The Alper function.} The limit above exists for every
+$h\notin\mathcal E$. This defines the \emph{Alper function}
+$h\mapsto\Alp(h)$, whose value at $0$ is the Alper constant
+(Section~\ref{sec:function}, Table~\ref{tab:function} and
+Figure~\ref{fig:function}).
+
+\begin{theoremC}[Theorem~\ref{thm:function} and
+Propositions~\ref{prop:shape} and~\ref{prop:shift}]
+Let $h\in[0,2)\setminus\mathcal E$, $\varphi=h-\lfloor h\rfloor$, and let
+$K$ and $\tau$ be as in Theorem~B. Then
+\[
+S_h(N)=\kappa N^{1/3}-\tfrac14\log N-\Alp(h)-\tfrac32\,\tau(1-\tau)
+-\frac{1-3\varphi-3\tau(1-\tau)(4\tau-1)}{4K}+O_h\bigl(N^{-2/3}\bigr).
+\]
+The function $\Alp$ is continuous, strictly increasing and strictly
+convex on every interval without points of $\mathcal E$, and it jumps
+down at every point of $\mathcal E$; at the first one, $6-2\sqrt7$, by
+$\frac{\sqrt7-1}6$. Moreover $\Alp(h)\to\Alp(1)$ as $h\to1^-$,
+$\Alp(h)\to\Alp(0)$ as $h\to2^-$, and $\Alp(h+2)=\Alp(h)$, where
+$\Alp(h+2)$ is defined by the same limit for the games $G_n(h+2)$.
+\end{theoremC}
+
 The case $h=1$ is a Project Euler problem, and its solvers may have
 obtained parts of our results for it, including the closed form and the
 first-order asymptotic formula; we make no priority claim for this case.
 The contributions developed here include the family $G_n(h)$, its
-transition law for general $h$, proofs of the asymptotic formulas for
-$h\in\{0,1\}$, the second-order term, the Alper constant and the
-certified digits. Section~\ref{sec:game}
+transition law and asymptotic formulas for general $h$, the second-order
+term, the Alper constant with its certified digits, and the Alper
+function. Section~\ref{sec:game}
 sets up the games, Section~\ref{sec:support} shows that the supports are
 intervals, and Section~\ref{sec:interval} solves the equilibrium
 equations on an interval of odd length. Section~\ref{sec:structure}
 proves the transition law and Theorem~A. Section~\ref{sec:blocks} sums the
 probabilities over blocks. Section~\ref{sec:asymptotics} proves
-Theorem~B, Section~\ref{sec:constant} studies the constants, and
+Theorem~B, Section~\ref{sec:constant} studies the constants,
 Section~\ref{sec:numerics} compares the theorems with exact values of
-$S_0(10^m)$ for $m\le20$.
+$S_0(10^m)$ for $m\le20$, and Section~\ref{sec:function} proves Theorem~C.
 
 \section{The games}\label{sec:game}
 
@@ -667,8 +697,9 @@ $P_1(y)>0$ for $y>2$. Their convex combinations are also equilibria.
 
 \section{Block sums}\label{sec:blocks}
 
-From now on $h\in\{0,1\}$. By Theorem~\ref{thm:structure}, $S_h$ is a
-sum over blocks. For $k\ge1$ put
+In Sections~\ref{sec:blocks}--\ref{sec:numerics}, $h\in\{0,1\}$; general
+$h$ is treated in Section~\ref{sec:function}. By
+Theorem~\ref{thm:structure}, $S_h$ is a sum over blocks. For $k\ge1$ put
 \[
 \ell_k=t_{k+1}(h)-t_k(h)-1=2k^2+2k+\frac{1+(-1)^{k+h}}2,\qquad
 B_k=B_k(h)=\sum_{n=t_k(h)}^{t_{k+1}(h)-2}P_k\Bigl(n-\frac h2\Bigr),
@@ -969,7 +1000,8 @@ The \emph{Alper constant} is $\Alp=\Alp(0)$.
 \end{definition}
 
 By Theorem~\ref{thm:asymptotics} the limit exists and is given by the
-series~\eqref{eq:series}. In the same way as Euler's constant measures
+series~\eqref{eq:series}; Section~\ref{sec:function} extends the
+definition to every $h\notin\mathcal E$. In the same way as Euler's constant measures
 how far the harmonic numbers lie from $\log N$, the Alper constant
 measures how far the equilibrium sums $S_0(N)$ lie from their smooth
 approximation $\kappa N^{1/3}-\frac14\log N$; along general $N$ the
@@ -1152,27 +1184,351 @@ limit $\kappa$ (dashed), and the curve $\kappa-(\frac14\log N+\Alp)/N^{1/3}$.}
 \end{figure}
 
 \FloatBarrier
+\section{The Alper function}\label{sec:function}
+
+The proofs of Sections~\ref{sec:blocks} and~\ref{sec:asymptotics} used
+$h\in\{0,1\}$ only through the explicit thresholds~\eqref{eq:tk-poly}.
+For other $h\notin\mathcal E$ the thresholds differ from those of $h=0$
+or $h=1$ only for finitely many $k$, and the arguments carry over. The
+constant $\Alp(h)$ thereby becomes a function of $h$, whose value at $0$
+is the Alper constant. Throughout this section
+\[
+h_0=\lfloor h\rfloor\in\{0,1\},\qquad \varphi=h-h_0\in[0,1).
+\]
+
+\begin{lemma}\label{lem:theta}
+For every $k\ge2$, $\vartheta_k<\frac1{2k}$. Consequently, if
+$h\in[0,2)\setminus\mathcal E$ and $k\ge2$, then $t_k(h)=t_k(h_0)+1$
+when $k\equiv h_0\pmod2$ and $2\vartheta_k>1-\varphi$, and
+$t_k(h)=t_k(h_0)$ otherwise. In particular $t_k(h)=t_k(h_0)$ for every
+$k\ge1/(1-\varphi)$.
+\end{lemma}
+
+\begin{proof}
+Retain $U$, $G$, $d=k-\frac12$, $v=\frac{4k^2-3}{12}$ and
+$x_0=\frac{k(4k^2-1)}6$ from the proof of Lemma~\ref{lem:root}, and
+$V=[-\frac k2,\frac k2]$ from Remark~\ref{rem:exceptional}. Let
+$z=x_0+\frac1{2k}$. As in the proof of Lemma~\ref{lem:root},
+$G(z)\le\frac kz\bigl(1+\frac v{z^2-d^2}\bigr)$, while
+$\lambda_k=\int_V\frac{x_0\,dt}{x_0^2-t^2}\ge\frac k{x_0}
+\bigl(1+\frac{k^2}{12x_0^2}\bigr)$. Since $z>x_0$, the inequality
+$G(z)<\lambda_k$ follows from
+$\frac{x_0v}{x_0^2-d^2}<\frac1{2k}+\frac{k^2}{12x_0}$, which, as
+$v-\frac{k^2}{12}=\frac{k^2-1}4$, is equivalent to
+\[
+2k\Bigl(\frac{k^2-1}4\,x_0^2+\frac{k^2d^2}{12}\Bigr)<x_0\bigl(x_0^2-d^2\bigr).
+\]
+Here $2k\cdot\frac{k^2-1}4\,x_0^2=\frac{3(k^2-1)}{4k^2-1}\,x_0^3
+<\frac34x_0^3$, so it suffices that
+$\frac{k^3d^2}6+x_0d^2\le\frac{x_0^3}4$. This holds because $d<k$ and
+$x_0\ge\frac58k^3$ give
+$\frac{k^3d^2}6+x_0d^2<\frac{19}{15}x_0k^2\le\frac{25}{256}k^6x_0
+\le\frac{x_0^3}4$ for $k\ge2$. Hence $G(z)<\lambda_k$, so $x^*<z$, that
+is, $\vartheta_k<\frac1{2k}$.
+
+The description of $t_k(h)$ is Remark~\ref{rem:exceptional} written in
+terms of $h_0$ and $\varphi$, using $t_k(1)=t_k(0)+1$ for even $k$: for
+$h_0=0$ exactly the even $k$ with $h>1-2\vartheta_k$ are raised by one,
+and for $h_0=1$ exactly the odd $k$ with $h>2-2\vartheta_k$. In both
+cases this means $2\vartheta_k>1-\varphi$, which is impossible for
+$k\ge1/(1-\varphi)$, because $2\vartheta_k<\frac1k$.
+\end{proof}
+
+\begin{definition}\label{def:function}
+For $h\in[0,2)\setminus\mathcal E$ let $\Alp(h)$ be the limit of
+Definition~\ref{def:alper}, taken along the ends $N_K=t_{K+1}(h)-1$ of
+the blocks of $G_n(h)$, which are exactly the zeros of $P$. The function
+$h\mapsto\Alp(h)$ is the \emph{Alper function}.
+\end{definition}
+
+\begin{theorem}\label{thm:function}
+Let $h\in[0,2)\setminus\mathcal E$, and let $N$, $K$ and $\tau$ be as in
+Theorem~B. The limit defining $\Alp(h)$ exists and is given by the
+series~\eqref{eq:series}, with the block sums
+$B_k(h)=\sum_{n=t_k(h)}^{t_{k+1}(h)-2}P_k(n-\frac h2)$, and
+\begin{equation}\label{eq:functionasym}
+S_h(N)=\kappa N^{1/3}-\frac14\log N-\Alp(h)-\frac32\,\tau(1-\tau)
+-\frac{1-3\varphi-3\tau(1-\tau)(4\tau-1)}{4K}+O_h(K^{-2}),
+\end{equation}
+uniformly in $\tau$. Moreover, for $k\ge\max\bigl(8,1/(1-\varphi)\bigr)$ and
+$\eta=(-1)^{k+h_0}$,
+\[
+B_k(h)=\frac32-\frac3{4k}+\Bigl(\frac{3\eta}8-\frac{3\varphi}4\Bigr)
+\frac1{k^2}+O(k^{-3}),
+\]
+with an implied constant that does not depend on $h$.
+\end{theorem}
+
+\begin{proof}
+Let $k\ge\max(8,1/(1-\varphi))$. By Lemma~\ref{lem:theta}, $t_k(h)$ and
+$t_{k+1}(h)$ agree with the thresholds of $h_0$. So the block $k$ has the
+length $\ell_k$ of Section~\ref{sec:blocks} for $h_0$, and
+$2t_k(h)-h-2=D+a_\eta-\varphi$. Thus~\eqref{eq:P-geometric} holds with
+$\xi_r=a_\eta-\varphi+2r-4X$. Lemma~\ref{lem:xibound} remains valid,
+because the shift lowers the lower bound of $\xi_r$ only to
+$-\frac73k+3$, and so does Proposition~\ref{prop:expansion}(c), with the
+moments $T_m$ of the shifted $\xi_r$. The shift lowers $T_1/D$ by
+$\varphi\ell_k/D=\frac{3\varphi}{2k}+O(k^{-2})$ and changes $T_2/D^2$ and
+$T_3/D^3$ by $O(k^{-2})$. In the proof of
+Proposition~\ref{prop:expansion}(a) the bracket therefore becomes
+$3k-\bigl(\frac{3(1-\eta)}4+\frac{3\varphi}2\bigr)\frac1k+O(k^{-2})$, and
+dividing by $2k+1$ gives the expansion of $B_k(h)$, uniformly in
+$\varphi\in[0,1)$.
+
+Hence $e_k(h)=B_k(h)-\frac32+\frac3{4k}=O(k^{-2})$, the
+series~\eqref{eq:series} converges absolutely, and, since
+$\sum_{k>K}(-1)^kk^{-2}=O(K^{-2})$ and
+$\sum_{k>K}k^{-2}=\frac1K+O(K^{-2})$,
+\[
+\sum_{k>K}e_k(h)=-\frac{3\varphi}{4K}+O(K^{-2}).
+\]
+For large $K$ the block ends $N_K=t_{K+1}(h)-1$ are those of $h_0$, so
+the block-end part of the proof of Theorem~\ref{thm:asymptotics} applies
+verbatim, except that the tail now contributes $\frac{3\varphi}{4K}$ to
+$S_h(N_K)$. This gives
+$S_h(N_K)=\kappa N_K^{1/3}-\frac14\log N_K-\Alp(h)-\frac{1-3\varphi}{4K}
++O(K^{-2})$, which is~\eqref{eq:functionasym} at the block ends, and it
+shows that the limit exists and equals~\eqref{eq:series}. In the part for
+general $N$ the shift changes $\E\xi$ by less than $1$, and hence $P_K$
+only by $O(K^{-4})$, so the expansion of $P_K$ used there, and with it
+the rest of the argument, is unchanged.
+\end{proof}
+
+\begin{proposition}\label{prop:shape}
+Let $\Alp$ be the Alper function on $[0,2)\setminus\mathcal E$.
+\begin{enumerate}
+\item[(a)] On every interval $J\subset[0,2)$ without points of
+$\mathcal E$ the thresholds $t_k(h)$ do not depend on $h$, and $\Alp$ is
+continuous, strictly increasing and strictly convex on $J$.
+\item[(b)] Let $h^*\in\mathcal E$. The one-sided limits $\Alp(h^*\pm)$
+exist, and
+\[
+\Alp(h^*+)-\Alp(h^*-)=-\sum_kP_{k-1}(\beta_k-1)<0,
+\]
+where $k$ runs over the finitely many $k\ge2$ with
+$\beta_k+\frac{h^*}2\in\mathbb Z$.
+\item[(c)] $\Alp(h)\to\Alp(1)$ as $h\to1^-$, and $\Alp(h)\to\Alp(0)$ as
+$h\to2^-$.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(a) A threshold $t_k(h)=\lfloor\beta_k+\frac h2\rfloor+1$ can change only
+where $\beta_k+\frac h2\in\mathbb Z$, that is, at a point of
+$\mathcal E$. Since $\mathcal E$ accumulates at $1$ and $2$ from below,
+$J$ lies in $[0,1)$ or in $[1,2)$, and $\varphi\le\varphi_J$ on $J$ for
+some $\varphi_J<1$. By Theorem~\ref{thm:function},
+$|e_k(h)|\le Ck^{-2}$ on $J$ for $k\ge\max(8,1/(1-\varphi_J))$, so the
+series~\eqref{eq:series} converges uniformly on $J$, and $\Alp$ is
+continuous there. By~\eqref{eq:P-mixture},
+$P_k(y)=\frac1{2k+1}-c\,\E\bigl[(2y-2-4X)^{-1}\bigr]$ with $c>0$, and
+$2y-2-4X\ge2y-4k+2>0$ in the block $k$, where $y>\beta_k>2k$ (for $k=1$,
+$y>2$). Hence every term $P_k(n-\frac h2)$, and with it every $e_k(h)$,
+is strictly decreasing and strictly concave in $h\in J$. So is
+$\sum_ke_k(h)$, and $\Alp$ is strictly increasing and strictly convex.
+
+(b) The point $h^*$ is isolated in $\mathcal E$, so (a) applies on
+intervals $(h^*-\varepsilon,h^*)$ and $(h^*,h^*+\varepsilon)$, with
+thresholds $t_k^-$ and $t_k^+$. The uniform convergence in (a) gives
+$\Alp(h^*\pm)=\frac32+\frac34\gamma+\frac14\log\frac32-\sum_ke_k^\pm(h^*)$,
+where $e_k^\pm$ is computed with the thresholds $t^\pm$. These differ
+only for the $k$ with $m=\beta_k+\frac{h^*}2\in\mathbb Z$, where
+$t_k^-=m$ and $t_k^+=m+1$: the block $k-1$ gains the number $m-1$, with
+$P_{k-1}(m-1-\frac{h^*}2)=P_{k-1}(\beta_k-1)$, and the block $k$ loses
+the number $m$, with $P_k(\beta_k)=0$. There are finitely many such $k$
+by Lemma~\ref{lem:theta}, and $P_{k-1}(\beta_k-1)>0$ by
+Remark~\ref{rem:exceptional}.
+
+(c) Let $\widetilde B_k(h)$ be the sum of $P_k(n-h/2)$ over
+$t_k(h_0)\le n\le t_{k+1}(h_0)-2$, even when these are not the actual
+thresholds for $h$. The algebra in the proof of
+Theorem~\ref{thm:function} applies to this sum for every $k\ge8$ and
+gives $\widetilde B_k(h)-3/2+3/(4k)=O(k^{-2})$, uniformly in $h$.
+By Lemma~\ref{lem:theta}, the actual block differs by at most its first
+and its last number. To include the possible extra last number, take
+$0\le r\le\ell_k$ in $\xi_r=a_\eta-\varphi+2r-4X$, with $\ell_k$
+and $a_\eta$ for $h_0$. Then
+\[
+-\frac73k+3\le\xi_r\le4k^2+\frac{17}3k+2,
+\qquad |\xi_r/D|\le4/k\quad(k\ge8).
+\]
+Equation~\eqref{eq:P-geometric} therefore gives the uniform bound
+\[
+\left|P_k\left(t_k(h_0)+r-\frac h2\right)\right|
+\le\frac{4/k+1/(2k^2)}{(2k+1)(1-4/k)}=O(k^{-2}).
+\]
+Consequently $|e_k(h)|\le Ck^{-2}$ for all $k\ge8$ and all
+$h\in[0,2)\setminus\mathcal E$, with one constant $C$. Each of the
+finitely many earlier terms is bounded as well, since its denominators
+stay positive for $0\le h\le2$. Dominated convergence now reduces
+the endpoint limits to those of each $e_k(h)$.
+As $h\to1^-$, eventually $t_k(h)=t_k(1)$ and
+$t_{k+1}(h)=t_{k+1}(1)$, so $e_k(h)\to e_k(1)$. As $h\to2^-$, eventually
+$t_k(h)=t_k(0)+1$ for each fixed $k\ge2$, and
+$P_k(n-\frac h2)\to P_k(n-1)$; hence $B_k(h)\to B_k(0)$ for $k\ge2$, and
+$B_1(h)\to P_1(2)+B_1(0)=B_1(0)$.
+\end{proof}
+
+For $h\ge2$ the rules of $G_n(h)$ still make sense, but some payments
+are $\le0$. We keep the notation $P(n)$ and $S_h(N)$ as long as all
+equilibria of the games involved assign the same probability to the
+largest number, and we define $\Alp(h)$ as the limit of
+$\kappa N^{1/3}-\frac14\log N-S_h(N)$ along the zeros $N$ of $P$, when it
+exists.
+
+\begin{proposition}\label{prop:shift}
+Let $h\in[0,2)\setminus\mathcal E$ and $j\ge1$.
+\begin{enumerate}
+\item[(a)] For $n\ge j+3$ the game $G_n(h+2j)$ has a unique equilibrium,
+obtained from that of $G_{n-j}(h)$ by raising every number by $j$. In
+particular, $P(n)$ for $G_n(h+2j)$ equals $P(n-j)$ for $G_{n-j}(h)$.
+\item[(b)] Every equilibrium of $G_3(h+2)$ assigns probability $0$ to the
+number $3$. Hence $S_{h+2}(N)=S_h(N-1)$ for $N\ge3$, with $S_h(2)=0$, and
+$\Alp(h+2)=\Alp(h)$.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(a) Lowering every number by $j$ preserves all differences, and a win
+with the lowered number $m$ pays $2(m+j)-(h+2j)=2m-h$. Thus $G_n(h+2j)$
+is the game on $\{1-j,\dots,n-j\}$ with the payments $2m-h$, and its
+numbers $1,\dots,n-j$ form $G_{n-j}(h)$. Let $p$ be the equilibrium of
+$G_{n-j}(h)$, extended by zero. Against $p$, a number $m\le0$ receives
+$2m-h\le0$ from each $i\ge1$ with $i-m$ odd and pays $2i-h>0$ to each
+$i\ge1$ with $i-m$ even. The support of $p$ consists of at least three
+consecutive numbers, so it meets both parities, and $f_m<0$. Thus $p$
+satisfies~\eqref{eq:eq-conditions}. If $q$ is any equilibrium, then
+\[
+\sum_iq_if_i(p)=q^{\mathsf T}Ap=-p^{\mathsf T}Aq=-\sum_ip_if_i(q)\ge0,
+\]
+while each term $q_if_i(p)$ is $\le0$. Hence $q_i=0$ whenever
+$f_i(p)<0$, in particular for $i\le0$, and $q$ is an equilibrium of
+$G_{n-j}(h)$; by Theorem~\ref{thm:structure}, $q=p$.
+
+(b) After lowering by one, $G_3(h+2)$ is the game on $\{0,1,2\}$. The
+pure strategy $1$ is an equilibrium, since against it $f_0=-h\le0$ and
+$f_2=-(2-h)<0$. As in (a), every equilibrium assigns probability $0$ to
+the number $2$, which is the original $3$. Together with (a) for $j=1$
+this gives $S_{h+2}(N)=S_h(N-1)$. The zeros of $P$ for $h+2$ are $3$ and
+the numbers $N_K+1$, and
+$\kappa(N_K+1)^{1/3}-\frac14\log(N_K+1)-S_h(N_K)\to\Alp(h)$.
+\end{proof}
+
+\begin{remark}\label{rem:integers}
+The identity $\Alp(h+2)=\Alp(h)$ in Proposition~\ref{prop:shift} has
+$0\le h<2$, $h\notin\mathcal E$, as its base range; it does not assert
+global periodicity. For $j\ge2$ and $N\ge j+2$,
+Proposition~\ref{prop:shift}(a) gives
+$S_{h+2j}(N)=c_j(h)+S_h(N-j)$, where $c_j(h)$ is the sum of the values
+$P(n)$ of the first games $G_n(h+2j)$, $3\le n\le j+2$, provided these
+are defined; then $\Alp(h+2j)=\Alp(h)-c_j(h)$. For
+$h\in(0,2)\setminus\mathcal E$ the argument
+of the proof above shows that ``always $3$'' is the unique equilibrium
+of $G_3(h+4)$ and of $G_4(h+4)$, so $c_2(h)=1$ and
+$\Alp(h+4)=\Alp(h)-1$. For $j\ge3$ the correction must in general be
+determined from these finitely many initial games.
+
+At a positive odd integer $h$ every payment is odd. Then every principal
+submatrix of $A$ of even order has an odd Pfaffian and is nonsingular,
+and every $G_n(h)$ has a unique equilibrium: if $p\ne q$ were equilibria
+and $U$ the union of their supports, the argument of the proof above
+would give $A_Up_U=A_Uq_U=0$, although the rank of $A_U$ is at least
+$|U|-1$. This extends the argument modulo $2$ mentioned in
+Section~\ref{sec:support}, and $\Alp$ is defined at every positive odd integer.
+The first games give $c_3(1)=\frac{14}9$ and $c_4(1)=\frac{91}{45}$, so
+\[
+\Alp(3)=\Alp(1),\qquad\Alp(5)=\Alp(1)-1,\qquad
+\Alp(7)=\Alp(1)-\tfrac{14}9,\qquad\Alp(9)=\Alp(1)-\tfrac{91}{45}.
+\]
+At an even integer $h=2j\ge4$ a win with $j$ pays $0$, and ``always
+$j$'' and ``always $j+1$'' are both equilibria of $G_{j+1}(2j)$. So
+$P(j+1)$ is not defined, and neither is $\Alp(2j)$, while
+$\Alp(2)=\Alp(0)$.
+\end{remark}
+
+\subsection*{Values}
+
+Table~\ref{tab:function} lists $\Alp(h)$ for $h=0,0.1,\dots,1.9$, and
+Figure~\ref{fig:function} shows the graph of $\Alp$ on $[0,2)$. The
+values are computed as in Theorem~\ref{thm:digits}: the thresholds are
+found by exact sign tests for $k\le193$ and are regular beyond, by
+Lemma~\ref{lem:theta}, and the tail uses the exact expansion of the
+regular blocks with the offset $a_\eta-\varphi$. The Arb enclosures have
+radius below $3\cdot10^{-54}$, and the values at $h=0$ and $h=1$ agree
+with Theorem~\ref{thm:digits}. The first points of $\mathcal E$ are
+\[
+\begin{aligned}
+&6-2\sqrt7=0.70849\ldots,\quad 1-2\vartheta_4=0.82150\ldots,\quad
+1-2\vartheta_6=0.87762\ldots,\\
+&2-2\vartheta_3=1.77198\ldots,\quad 2-2\vartheta_5=1.85456\ldots,
+\end{aligned}
+\]
+where $6-2\sqrt7$ comes from $\beta_2=5+\sqrt7$. It is the first
+exceptional point: for even $k\ge4$, Lemma~\ref{lem:theta} gives
+$\vartheta_k<1/8<\vartheta_2$, while odd $k$ give points above $1$.
+At this first point
+$\Alp$ falls from $2.03182\ldots$ to $1.75753\ldots$, a jump of
+$P_1(4+\sqrt7)=\frac{\sqrt7-1}6=0.27429\ldots$. On a grid of $3207$
+points the largest value of $\Alp$ lies just below $6-2\sqrt7$, and the
+smallest is $\Alp(1)$.
+
+\begin{table}[!htb]
+\centering
+\begin{tabular}{rlrl}
+\toprule
+$h$ & $\Alp(h)$ & $h$ & $\Alp(h)$\\
+\midrule
+$0.0$ & 1.7771799879 & $1.0$ & 1.6464176534 \\
+$0.1$ & 1.8116524222 & $1.1$ & 1.6854092798 \\
+$0.2$ & 1.8465611039 & $1.2$ & 1.7252229864 \\
+$0.3$ & 1.8819309085 & $1.3$ & 1.7659309340 \\
+$0.4$ & 1.9177891039 & $1.4$ & 1.8076154543 \\
+$0.5$ & 1.9541656688 & $1.5$ & 1.8503710032 \\
+$0.6$ & 1.9910936650 & $1.6$ & 1.8943065925 \\
+$0.7$ & 2.0286096750 & $1.7$ & 1.9395488435 \\
+$0.8$ & 1.7913637669 & $1.8$ & 1.8508040685 \\
+$0.9$ & 1.7105887967 & $1.9$ & 1.8174408673 \\
+\bottomrule
+\end{tabular}
+\caption{The Alper function, rounded to $10$ decimals. The values at
+$0.8$, $0.9$, $1.8$ and $1.9$ lie beyond the first points of
+$\mathcal E$, where $\Alp$ jumps down.}
+\label{tab:function}
+\end{table}
+
+\begin{figure}[!htb]
+\centering
+\includegraphics[width=0.9\textwidth]{fig_alper_function.pdf}
+\caption{The Alper function on $[0,2)$, drawn on each interval between
+consecutive points of $\mathcal E$ with $k\le120$; grey lines mark the
+first points of $\mathcal E$. The filled dots are $\Alp=\Alp(0)$ and
+$\Alp(1)$. The open dot at $h=2$ is the limit $\Alp(0)$ of $\Alp(h)$ as
+$h\to2^-$, which equals $\Alp(2)$ by Proposition~\ref{prop:shift}.}
+\label{fig:function}
+\end{figure}
+
+\FloatBarrier
 \section{Concluding remarks}\label{sec:remarks}
 
 The structure of the equilibria rests on two features of the payments:
 they grow linearly, which makes the payoff differences in
 Lemma~\ref{lem:rows} positive and the neighbour equations solvable, and
-the largest payment enters only through $y=n-\frac h2$. For
-$h\notin\mathcal E\cup\{0,1\}$, Remark~\ref{rem:exceptional} proves
-that the thresholds eventually coincide with those of $h=0$ or $h=1$;
-the proof of Theorem~\ref{thm:asymptotics} should then give the same
-first-order formula, with a constant $\Alp(h)$ defined by the actual
-block sums, while the term of order $1/K$ acquires an $h$-dependent part.
-We have not pursued this.
+the largest payment enters only through $y=n-\frac h2$. In the
+asymptotics the parameter $h$ acts in two ways: through the finitely
+many irregular thresholds, which cause the jumps of the Alper function,
+and through the shift $\varphi$ of the regular blocks, which appears in
+the term of order $1/K$.
 
 We list some questions that we have not answered.
 \begin{enumerate}
 \item Does $\Alp$ have a closed form in classical constants? Is it
 irrational?
-\item Can the asymptotic definition of $\Alp(h)$ be extended to every
-$h\notin\mathcal E$, and how does the resulting function depend on
-$h$? The thresholds change at the points of $\mathcal E$, which
-accumulate at $1$ and $2$.
+\item Is $\vartheta_k$ strictly decreasing? Then every point of
+$\mathcal E$ comes from a single $k$, and the sum in
+Proposition~\ref{prop:shape}(b) has one term; this holds for $k\le400$.
+More generally, how does $\Alp(h)$ approach $\Alp(1)$ and $\Alp(0)$ as
+$h\to1^-$ and $h\to2^-$, where the jumps and the gaps between the
+points of $\mathcal E$ are both of order $k^{-2}$?
 \item What is the nature of the series $\sum_jb_{j,\pm}k^{-j}$ in
 Table~\ref{tab:coefficients}? Its coefficients grow quickly, and we
 expect it to diverge.
@@ -1183,8 +1539,9 @@ interesting.
 \end{enumerate}
 
 The exact checks of all displayed identities and examples, the
-computation of the tables and the figure, and the programs that certify
-$\Alp$ and $\Alp(1)$ are included in the source archive and at
+computation of the tables and the figures, and the programs that certify
+$\Alp$, $\Alp(1)$ and the values of the Alper function are included in
+the source archive. Project repository:
 \url{https://github.com/AlperTheKing/alper-constant}. AI assistance was
 used in the derivations, in writing and running the verification code,
 and in preparing this manuscript. Review status: Author reviewed.

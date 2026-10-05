@@ -470,13 +470,19 @@ def check_partial_fractions():
             check(P(k, y) == F(1, 2 * k + 1) - F(2 * k * (2 * k * k + 1), 3 * (2 * k + 1)) * expectation, "eq:P-mixture")
 
 
+def mpq(x):
+    x = F(x)
+    return mp.mpf(x.numerator) / x.denominator
+
+
 def block_sum_mp(k, h, first=None, last=None):
-    """Proposition 6.2 with a moving digamma window (two digamma values per block)."""
+    """Proposition 6.2 with a moving digamma window (two digamma values per block); h may be rational."""
     first = t(k, h) if first is None else first
     last = t(k + 1, h) - 2 if last is None else last
     if last < first:
         return mp.mpf(0)
-    half = mp.mpf(h) / 2
+    hm = mpq(h)
+    half = hm / 2
     harmonic = (mp.digamma(last - half) - mp.digamma(first - 1 - half)) / 2
     cs = [mp.mpf(1)]
     for j in range(1, k):
@@ -485,8 +491,8 @@ def block_sum_mp(k, h, first=None, last=None):
     for j in range(1, k + 1):
         weighted += 2 * (2 * k - 2 * j + 1) * cs[j - 1] * cs[k - j] * harmonic
         if j < k:
-            harmonic += (1 / mp.mpf(2 * first - h - 4 * j - 2) + 1 / mp.mpf(2 * first - h - 4 * j)
-                         - 1 / mp.mpf(2 * last - h - 4 * j) - 1 / mp.mpf(2 * last - h - 4 * j + 2))
+            harmonic += (1 / (2 * first - hm - 4 * j - 2) + 1 / (2 * first - hm - 4 * j)
+                         - 1 / (2 * last - hm - 4 * j) - 1 / (2 * last - hm - 4 * j + 2))
     return (last - first + 1 - mp.mpf(2 * k * k + 1) * weighted / 3) / (2 * k + 1)
 
 
@@ -718,6 +724,266 @@ def check_tables_and_text():
     check("3,8,22,47,89,150,236,349" in compact and "3,9,22,48,89,151,236,350" in compact, "first thresholds in the text")
 
 
+# ---------------------------------------------------------------- section 10: the Alper function
+FUNC_DIR = ROOT / "reproducibility" / "alper_function"
+
+
+def t_general(k, h):
+    """t_k(h) for rational h: the first n with P_k(n - h/2) > 0, by an exact sign test."""
+    if k == 1:
+        return 3
+    n = t(k, 0)
+    while True:
+        value = P(k, F(n) - h / 2)
+        check(value != 0, "rational h is not exceptional")
+        if value > 0:
+            return n
+        n += 1
+
+
+def t_lemma(k, h):
+    """Lemma 10.1: t_k(h) = t_k(h0) for k >= 1/(1 - phi); exact sign test below that."""
+    h0 = 0 if h < 1 else 1
+    return t(k, h0) if k * (1 - (h - h0)) >= 1 else t_general(k, h)
+
+
+def equilibrium_general(n, h):
+    k = 1
+    while t_lemma(k + 1, h) <= n:
+        k += 1
+    b = n - 1 if n == t_lemma(k + 1, h) - 1 else n
+    return k, b, interval_solution(k, b, h)[0]
+
+
+def nullspace_vector(rows):
+    """A nonzero kernel vector of a square rational matrix with a one-dimensional kernel, else None."""
+    m = [r[:] for r in rows]
+    n = len(m)
+    pivots, r = [], 0
+    for c in range(n):
+        piv = next((i for i in range(r, n) if m[i][c] != 0), None)
+        if piv is None:
+            continue
+        m[r], m[piv] = m[piv], m[r]
+        m[r] = [x / m[r][c] for x in m[r]]
+        for i in range(n):
+            if i != r and m[i][c] != 0:
+                m[i] = [x - m[i][c] * y for x, y in zip(m[i], m[r])]
+        pivots.append(c)
+        r += 1
+    free = [c for c in range(n) if c not in pivots]
+    if len(free) != 1:
+        return None
+    v = [F(0)] * n
+    v[free[0]] = F(1)
+    for i, c in enumerate(pivots):
+        v[c] = -m[i][free[0]]
+    return v
+
+
+def any_equilibrium(n, h):
+    """An exact equilibrium of G_n(h) by support enumeration (small n)."""
+    from itertools import combinations
+    h = F(h)
+    for size in range(1, n + 1, 2):
+        for S in combinations(range(1, n + 1), size):
+            v = [F(1)] if size == 1 else nullspace_vector([[payoff_rule(i, j, h) for j in S] for i in S])
+            if v is None or sum(v) == 0:
+                continue
+            total = sum(v)
+            p = {i: x / total for i, x in zip(S, v)}
+            if all(x >= 0 for x in p.values()) and all(payoffs_rule(p, i, h) <= 0 for i in range(1, n + 1)):
+                return p
+    return None
+
+
+def payoffs_rule(p, i, h):
+    return sum((payoff_rule(i, j, h) * pj for j, pj in p.items()), F(0))
+
+
+def check_alper_function(theta):
+    func = json.loads((FUNC_DIR / "alper_function_values.json").read_text(encoding="utf-8"))
+    grid = json.loads((FUNC_DIR / "alper_function_grid.json").read_text(encoding="utf-8"))
+    tex = TEX.read_text(encoding="utf-8")
+    compact = re.sub(r"\\\\|[\s&]", "", tex)
+    euler_part = mp.mpf(3) / 2 + 3 * mp.euler / 4 + mp.log(mp.mpf(3) / 2) / 4
+    # Lemma 10.1: theta_k < 1/(2k), its proof, and the threshold rule
+    for k in range(2, 401):
+        check(theta[k] < mp.mpf(1) / (2 * k), "Lemma 10.1: theta_k < 1/(2k)")
+        if k >= 3:
+            check(theta[k] < theta[k - 1], "theta_k decreasing for k <= 400 (question 2)")
+    import sympy as sp
+    ks = sp.symbols("k", positive=True)
+    x0s = ks * (4 * ks**2 - 1) / 6
+    check(sp.simplify(2 * ks * (ks**2 - 1) / 4 * x0s**2 - 3 * (ks**2 - 1) / (4 * ks**2 - 1) * x0s**3) == 0,
+          "Lemma 10.1: 2k (k^2-1)/4 x0^2 = 3(k^2-1)/(4k^2-1) x0^3")
+    for k in range(2, 3001):
+        x0, d, v = F(k * (4 * k * k - 1), 6), F(2 * k - 1, 2), F(4 * k * k - 3, 12)
+        check(v - F(k * k, 12) == F(k * k - 1, 4) and x0 >= F(5 * k**3, 8), "Lemma 10.1: v - k^2/12, x0 >= 5k^3/8")
+        check(x0 * v / (x0 * x0 - d * d) < F(1, 2 * k) + F(k * k, 12) / x0, "Lemma 10.1: sufficient inequality")
+        check(2 * k * (F(k * k - 1, 4) * x0 * x0 + F(k * k, 12) * d * d) < x0 * (x0 * x0 - d * d), "Lemma 10.1: cleared form")
+        check(F(k**3, 6) * d * d + x0 * d * d < F(19, 15) * x0 * k * k <= F(25, 256) * k**6 * x0 <= x0**3 / 4,
+              "Lemma 10.1: final chain")
+    for k in range(2, 61):
+        z = mp.mpf(k * (4 * k * k - 1)) / 6 + mp.mpf(1) / (2 * k)
+        G = mp.fsum(mp.log((z + c + mp.mpf(1) / 2) / (z + c - mp.mpf(1) / 2)) for c in [k + 1 - 2 * j for j in range(1, k + 1)])
+        check(G < mp.log(mp.mpf(2 * k * k + 1) / (2 * k * k - 2)), "Lemma 10.1: G(x0 + 1/(2k)) < lambda_k")
+    raised = {}
+    for j in range(40):
+        h = F(j, 20)
+        h0 = 0 if h < 1 else 1
+        phi = h - h0
+        for k in range(2, 61):
+            delta = 1 if (k % 2 == h0 and 2 * theta[k] > 1 - mpq(phi)) else 0
+            tk = t_general(k, h)
+            check(tk == t(k, h0) + delta, "Lemma 10.1: threshold rule")
+            check(k * (1 - phi) < 1 or delta == 0, "Lemma 10.1: regular for k >= 1/(1-phi)")
+            check(t_lemma(k, h) == tk, "t_lemma")
+            if delta:
+                raised.setdefault(str(h), []).append(k)
+    REPORT["raised_thresholds_h_j_over_20"] = raised
+    # Theorem 10.3 for table values, including h with irregular thresholds
+    table = func["table"]
+    from flint import arb, ctx
+    with ctx.workdps(100):
+        for key, entry in table.items():
+            saved_ball = arb(entry["A_ball"])
+            check(saved_ball.rad() < arb("3e-54"),
+                  "stored Arb enclosure, not only the radius metadata, has radius below 3e-54")
+            for places in (10, 20):
+                scaled = (saved_ball * 10**places + arb("0.5")).floor().unique_fmpz()
+                expected = int(entry["A_%d_decimals" % places].replace(".", ""))
+                check(scaled is not None and int(scaled) == expected,
+                      "stored Arb ball certifies the printed decimal rounding")
+    for key, entry in table.items():
+        check(entry["A_10_decimals"] == entry["A_20_decimals"][:12] or abs(mp.mpf(entry["A_10_decimals"]) - mp.mpf(entry["A_20_decimals"])) <= mp.mpf("5e-11"),
+              "10- and 20-decimal roundings agree")
+        check(mp.mpf(entry["radius"].strip("[").split()[0]) < mp.mpf("3e-54"), "radius below 3e-54")
+    for h in (0, 1):
+        check(abs(mp.mpf(table["%.1f" % h]["A_20_decimals"]) - mp.mpf(CERT[h]["certified_80_decimals"]["A"])) <= mp.mpf("5e-21"),
+              "table agrees with Theorem 8.2")
+    residuals = {}
+    for key in ("0.3", "0.8", "1.3", "1.9"):
+        h = F(key)
+        h0 = 0 if h < 1 else 1
+        phi = mpq(h - h0)
+        A = mp.mpf(table[key]["A_20_decimals"])
+        S, worst_end, worst_no_phi, worst_bk, partial = mp.mpf(0), 0, 0, 0, {}
+        for K in range(1, 801):
+            if K in (200, 400, 800):
+                partial[K] = S - mp.mpf(3) / 2 * (K - 1) + 3 * (mp.digamma(K) - mp.digamma(1)) / 4
+            B = block_sum_mp(K, h, t_lemma(K, h), t_lemma(K + 1, h) - 2)
+            S += B
+            if K >= 8 and K * (1 - (h - h0)) >= 1:
+                eta = (-1) ** (K + h0)
+                e = B - mp.mpf(3) / 2 + mp.mpf(3) / (4 * K)
+                worst_bk = max(worst_bk, abs(e - (3 * mp.mpf(eta) / 8 - 3 * phi / 4) / K**2) * K**3)
+            if K >= 10:
+                N = t_lemma(K + 1, h) - 1
+                d = S - (KAPPA * mp.cbrt(N) - mp.log(N) / 4 - A - (1 - 3 * phi) / (4 * K))
+                worst_end = max(worst_end, abs(d) * K * K)
+                worst_no_phi = max(worst_no_phi, abs(d - 3 * phi / (4 * K)) * K * K)
+        check(worst_bk < 5, "Theorem 10.3: expansion of B_k(h)")
+        check(worst_end < 10, "Theorem 10.3 at block ends")
+        check(worst_no_phi > 50, "without the phi term the residual grows like K")
+        # independent value of A(h): Richardson extrapolation of the partial sums of e_k (even cutoffs)
+        U = {K: partial[K] - 3 * phi / (4 * K) for K in partial}
+        V1, V2 = (4 * U[400] - U[200]) / 3, (4 * U[800] - U[400]) / 3
+        W = (8 * V2 - V1) / 7
+        check(abs(euler_part - W - A) < mp.mpf("1e-8"), "independent Richardson value of A(h)")
+        worst_general = 0
+        for K in (64, 128, 256, 512):
+            S_prev = mp.fsum(block_sum_mp(k, h, t_lemma(k, h), t_lemma(k + 1, h) - 2) for k in range(1, K))
+            DK = t_lemma(K + 1, h) - t_lemma(K, h)
+            for r in sorted(set([1, DK // 7, DK // 3, DK // 2, (2 * DK) // 3, (6 * DK) // 7, DK - 1])):
+                N = t_lemma(K, h) - 1 + r
+                tau = mp.mpf(r) / DK
+                S_N = S_prev + block_sum_mp(K, h, t_lemma(K, h), N)
+                c = -(1 - 3 * phi - 3 * tau * (1 - tau) * (4 * tau - 1)) / 4
+                d = S_N - (KAPPA * mp.cbrt(N) - mp.log(N) / 4 - A - mp.mpf(3) / 2 * tau * (1 - tau) + c / K)
+                worst_general = max(worst_general, abs(d) * K * K)
+        check(worst_general < 10, "Theorem 10.3 for general N")
+        residuals[key] = {"K3_Bk": float(worst_bk), "K2_block_ends": float(worst_end), "K2_without_phi_term": float(worst_no_phi),
+                          "K2_general_N": float(worst_general), "richardson_minus_table": mp.nstr(euler_part - W - A, 3)}
+    REPORT["alper_function_theorem_10_3"] = residuals
+    # Proposition 10.4: monotone and convex pieces, the first jump, the exceptional points
+    for g in grid["components"]:
+        hs, As = g["h"], g["A"]
+        check(all(y > x for x, y in zip(As, As[1:])), "Proposition 10.4(a): increasing on each piece")
+        slopes = [(As[i + 1] - As[i]) / (hs[i + 1] - hs[i]) for i in range(len(hs) - 1)]
+        check(all(s2 > s1 - 1e-9 for s1, s2 in zip(slopes, slopes[1:])), "Proposition 10.4(a): convex on each piece")
+    for k in range(2, 121):
+        check(abs(mp.mpf(grid["exceptional_points"][str(k)]) - ((k % 2) + 1 - 2 * theta[k])) < mp.mpf(10) ** -12, "points of E")
+    values = {round(float(key), 1): mp.mpf(entry["A_20_decimals"]) for key, entry in table.items()}
+    for lo, hi in ((0.0, 0.7), (1.0, 1.7)):
+        seq = [values[round(lo + i / 10, 1)] for i in range(8)]
+        check(all(y > x for x, y in zip(seq, seq[1:])) and all(seq[i + 2] - 2 * seq[i + 1] + seq[i] > 0 for i in range(6)),
+              "Table 4: increasing and convex before the first jump")
+    s7 = sp.sqrt(7)
+    yy = sp.symbols("y")
+    P2 = (9 * (yy - 2) * (yy - 4) / ((yy - 1) * (yy - 3)) - 6) / 15
+    check(sp.simplify(P2.subs(yy, 5 + s7)) == 0 and abs(5 + mp.sqrt(7) - (4 * 8 + 10 + 3) / mp.mpf(6) - theta[2]) < mp.mpf(10) ** -15,
+          "beta_2 = 5 + sqrt 7")
+    check(sp.simplify(((4 + s7) - 2) / (3 * ((4 + s7) - 1)) - (s7 - 1) / 6) == 0, "P_1(4 + sqrt 7) = (sqrt 7 - 1)/6")
+    check(abs((6 - 2 * mp.sqrt(7)) - (1 - 2 * theta[2])) < mp.mpf(10) ** -15, "first point of E is 6 - 2 sqrt 7")
+    jump = func["jump_k2"]
+    left, right = mp.mpf(jump["A_left"].strip("[").split()[0]), mp.mpf(jump["A_right"].strip("[").split()[0])
+    check(abs(left - right - (mp.sqrt(7) - 1) / 6) < mp.mpf("1e-10"), "Proposition 10.4(b): first jump")
+    check(min(min(g["A"]) for g in grid["components"]) == grid["components"][len([k for k in range(2, 121, 2)])]["A"][0], "grid minimum is A(1)")
+    best = max((max(g["A"]), i) for i, g in enumerate(grid["components"]))
+    check(best[1] == 0 and grid["components"][0]["A"][-1] == best[0], "grid maximum just below 6 - 2 sqrt 7")
+    # Proposition 10.5 and Remark 10.6: shifted games, exactly
+    for h in (F(0), F(1), F(1, 3), F(7, 5), F(3, 4), F(19, 10)):
+        for j in (1, 2, 3):
+            for n in range(j + 3, j + 31):
+                _, b, p = equilibrium_general(n - j, h)
+                q = {m + j: v for m, v in p.items()}
+                for i in range(1, n + 1):
+                    f = payoffs_rule(q, i, h + 2 * j)
+                    check(f == 0 if q.get(i, 0) > 0 else f < 0, "Proposition 10.5(a): raised equilibrium, strict off the support")
+                check(q.get(n, F(0)) == p.get(n - j, F(0)), "Proposition 10.5(a): P(n) = P(n - j)")
+        pure2 = {2: F(1)}
+        check(payoffs_rule(pure2, 1, h + 2) == -h and payoffs_rule(pure2, 3, h + 2) == -(2 - h), "Proposition 10.5(b)")
+        if h > 0:
+            pure3 = {3: F(1)}
+            check(all(payoffs_rule(pure3, i, h + 4) < 0 for i in (1, 2, 4)), "Remark 10.6: c_2(h) = 1")
+    from itertools import combinations
+    for h in (1, 3, 5, 7, 9):
+        for n in range(2, 9):
+            for size in range(2, n + 1, 2):
+                for U in combinations(range(1, n + 1), size):
+                    dU = det([[F(payoff_rule(i, j, h)) for j in U] for i in U])
+                    check(dU.denominator == 1 and dU.numerator % 2 == 1, "Remark 10.6: odd Pfaffians at odd h")
+    c = {}
+    for j in (1, 2, 3, 4):
+        h = 1 + 2 * j
+        total = F(0)
+        for n in range(3, j + 3):
+            p = any_equilibrium(n, h)
+            check(p is not None, "an equilibrium exists")
+            total += p.get(n, F(0))
+        c[j] = total
+    check(c == {1: 0, 2: 1, 3: F(14, 9), 4: F(91, 45)}, "Remark 10.6: c_j(1)")
+    REPORT["c_j_at_h_1"] = {j: str(v) for j, v in c.items()}
+    for j in (2, 3, 4, 5):
+        h = 2 * j
+        for pure in (j, j + 1):
+            check(all(payoffs_rule({pure: F(1)}, i, h) <= 0 for i in range(1, j + 2)), "Remark 10.6: two equilibria at even h")
+    # text
+    rows = re.findall(r"^\$(\d\.\d)\$ & ([0-9.]+) & \$(\d\.\d)\$ & ([0-9.]+) \\\\$", tex, flags=re.M)
+    check(len(rows) == 10, "Table 4 has 10 rows")
+    for h1, v1, h2, v2 in rows:
+        check(table[h1]["A_10_decimals"] == v1 and table[h2]["A_10_decimals"] == v2, "Table 4 entries")
+    for k, text in ((2, "0.70849"), (4, "0.82150"), (6, "0.87762"), (3, "1.77198"), (5, "1.85456")):
+        check(grid["exceptional_points"][str(k)].startswith(text) and text in tex, "points of E in the text")
+    check(jump["A_left"].strip("[").startswith("2.03182") and jump["A_right"].strip("[").startswith("1.75753")
+          and "2.03182" in tex and "1.75753" in tex and "0.27429" in tex and mp.nstr((mp.sqrt(7) - 1) / 6, 8).startswith("0.27429"),
+          "first jump in the text")
+    check("$3207$" in tex and grid["evaluations"] == 3207, "grid size in the text")
+    check("\\frac{14}9" in tex and "\\frac{91}{45}" in tex and "6-2\\sqrt7" in tex and "\\frac{\\sqrt7-1}6" in tex, "Remark 10.6 text")
+    REPORT["alper_function_table"] = {key: entry["A_10_decimals"] for key, entry in table.items()}
+
+
 def main():
     start = time.time()
     steps = [check_game_basics, check_rows_lemma, check_kernel_and_even_intervals, check_interval_theorem, check_example,
@@ -737,6 +1003,9 @@ def main():
         t0 = time.time()
         step()
         print("%-34s ok  (%5.1f s, %d assertions so far)" % (step.__name__, time.time() - t0, COUNT["assertions"]), flush=True)
+    t0 = time.time()
+    check_alper_function(theta)
+    print("%-34s ok  (%5.1f s, %d assertions so far)" % ("check_alper_function", time.time() - t0, COUNT["assertions"]), flush=True)
     REPORT.update({"status": "PASS", "assertions": COUNT["assertions"], "seconds": round(time.time() - start, 1),
                    "python": platform.python_version(), "mpmath": mp.__version__})
     try:

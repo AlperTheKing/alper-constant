@@ -1,0 +1,4 @@
+evaluations: 3207  max radius: 2.4001470347973386e-54
+min sampled value: 1.6464176534 at h = 1.000000
+max sampled value: 2.0317990917 at h = 0.708427
+wrote alper_function_grid.json and fig_alper_function.pdf
