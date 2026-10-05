@@ -17,10 +17,10 @@
 - Related problem: Project Euler Problem 1012 (the case h = 1), cited in the paper
 - Suggested site path: /papers/parity-rps-alper-constant/
 - DOI: Not assigned
-- Publication status: Unrefereed preprint; reviewed revision prepared locally
+- Publication status: Unrefereed preprint; version 1.1 public on GitHub
 - Review status: Author reviewed
 - Latest review: Section 10 reviewed and corrected locally; 21-page PDF, 1,154,124 checks passed, table/grid regenerated, separate 110-digit cross-check added
-- Release scope: Version 1.0 (paper, code, certificates) is public at https://github.com/AlperTheKing/alper-constant; version 1.1 prepared locally; site publication pending
+- Release scope: Version 1.0 (commit 487992b) and version 1.1 (commit a4b73a7, adds Section 10) of the paper, code and certificates are public at https://github.com/AlperTheKing/alper-constant (5 October 2026); site publication pending
 
 ## Abstract
 

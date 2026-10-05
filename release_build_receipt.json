@@ -105,7 +105,7 @@
     "paper.pdf": "043ab16757feb9162fb9fd29eb44c82f6ed3f933950931f3ab7b36289131688f",
     "README.md": "c771d62056a61363617b78bb4251591e41742d546c3700cdc85de6249da9513b",
     "README_submission.md": "0748ad7920211f3ed25b8489079a38b13f94c11efa04d9ce784587a11733e8d0",
-    "submission_metadata.md": "dcbfe48327b1a3783a358f7b2c8126e60d4b876f0e6bb2af5c42e5ce46f4c8c2",
+    "submission_metadata.md": "bbdd394f15527be92c6574b63b892392da104f5e8b03b792a5bd322b1a0a4bd1",
     "verification_report.md": "977361b0e19628cfee66c20872f5938caabb09adc497c16a6076ddde31fe5a48",
     "references.bib": "9420078d41a2af8337c1b50bf82df12818f4de121f284bcd2aa29ee62c8c9e6d",
     "fig_equilibrium.pdf": "135be8b61c0b6faee1aa77ab5a9a1a6e507ade1348910781862fc7f7c72f17c4",
@@ -127,5 +127,18 @@
     "reproducibility/certificate/research_checks_h1.json": "4a9a0b3540fc985d4edcf3051a6992d3c293fc5806adf0d121ffb2e899ad93a6",
     "reproducibility/figures/alperconstant.cpp": "ad7f5ab03915f52ee7cc4345be271cc51efa9819830a3a6f41423269f3e605e2",
     "reproducibility/figures/S_h0_40dp.txt": "06e9b57cc6acf4c7efa592efe5566d79a82088fc454cec813ce39e545d904181"
+  },
+  "post_review_edits": [
+    {
+      "file": "submission_metadata.md",
+      "date": "2026-10-05",
+      "change": "Publication status and Release scope updated after version 1.1 was pushed to GitHub; no other file of the reviewed package changed"
+    }
+  ],
+  "public_release_github": {
+    "repository": "https://github.com/AlperTheKing/alper-constant",
+    "version_1_0_commit": "487992b",
+    "version_1_1_commit": "a4b73a7afcc7b872299b407a1f4f0f11cb465cea",
+    "version_1_1_files_verified_on_github": true
   }
 }
