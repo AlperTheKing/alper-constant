@@ -1,0 +1,24 @@
+{
+  "h": 0,
+  "independent_sum_e": "0.2570980377977675524213691301515475449990460757503018742149474137540540209509135402623010620954059432",
+  "difference_from_certificate": "7.69242785301225e-94",
+  "neighbor_identities_symbolic": true,
+  "gosper_in_n": {
+    "1": "None",
+    "2": "None",
+    "3": "None",
+    "4": "None"
+  },
+  "pslq": {
+    "sum_e_basic": null,
+    "sum_e_extended": null,
+    "C_prime_basic": null,
+    "C_prime_extended": null,
+    "A_basic": null,
+    "A_extended": null
+  },
+  "pslq_dps": 120,
+  "pslq_tolerance": "1e-85",
+  "pslq_maxcoeff": 1000,
+  "pslq_maxsteps": 10000
+}

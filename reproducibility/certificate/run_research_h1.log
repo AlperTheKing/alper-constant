@@ -1,0 +1,9 @@
+Independent mpmath sum_e: 0.387860372262630707094903230442075821121620269120648718434468752099587712694728498393552959
+Difference from certified midpoint: 4.309292e-94
+PSLQ sum_e basic None
+PSLQ sum_e extended None
+PSLQ C_prime basic None
+PSLQ C_prime extended None
+PSLQ A basic None
+PSLQ A extended None
+exit 0
