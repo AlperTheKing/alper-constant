@@ -354,7 +354,20 @@ def check_root_bound():
     REPORT["theta_2_10_400"] = [mp.nstr(theta[2], 6), mp.nstr(theta[10], 6), mp.nstr(theta[400], 6)]
     check(mp.nstr(theta[2], 4) == "0.1458" and mp.nstr(theta[10], 3) == "0.0372" and mp.nstr(theta[400], 2) == "0.00094",
           "theta values quoted in Remark 5.5")
-    check(all(abs(theta[k] * 8 * k / 3 - 1) < mp.mpf(25) / k for k in range(2, 401)), "theta_k ~ 3/(8k)")
+    # Numerical validation of the newly written moment/mean-value proof.
+    # This finite check does not prove its O(k^-3) conclusion.
+    scaled_root_errors = [abs(k**3 * (theta[k] - mp.mpf(3) / (8 * k))) for k in range(2, 401)]
+    check(max(scaled_root_errors) < mp.mpf(1) / 2,
+          "finite check: k^3 |theta_k - 3/(8k)| < 1/2 for 2 <= k <= 400")
+    REPORT["root_offset_k3_error_max_2_to_400"] = mp.nstr(max(scaled_root_errors), 12)
+    for k in range(2, 401):
+        delta_moment = F(k * (4 * k * k - 3), 12) - F(k**3, 12)
+        check(delta_moment == F(k * (k * k - 1), 4), "root-offset second-moment difference")
+    # Root bounds suffice for positivity of the first limiting mass.
+    for k in range(2, 401):
+        lower_beta_k = F(4 * k**3 + 5 * k + 3, 6)
+        upper_beta_previous = F(4 * (k - 1)**3 + 5 * (k - 1) + 6, 6) if k >= 3 else F(2)
+        check(lower_beta_k - 1 > upper_beta_previous, "root gap gives distinct exceptional equilibria")
     return theta
 
 

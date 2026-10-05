@@ -17,7 +17,9 @@
 - Related problem: Project Euler Problem 1012 (the case h = 1), cited in the paper
 - Suggested site path: /papers/parity-rps-alper-constant/
 - DOI: Not assigned
-- Publication status: Unpublished; prepared locally
+- Publication status: Unrefereed preprint; reviewed revision prepared locally
+- Review status: Author reviewed
+- Release scope: The reviewed revision (paper, code, certificates) is public at https://github.com/AlperTheKing/alper-constant; site publication pending
 
 ## Abstract
 
@@ -28,11 +30,13 @@ by the larger number, and a win with the number m pays 2m-h, where
 Euler; for h = 0 the payment is proportional to the winning number. For
 every h outside an explicit countable set we prove that the game has a
 unique equilibrium, supported on 2k+1 consecutive numbers ending at n or
-n-1, and we solve it in closed form. The probability P(n) of the largest
-number is ((2k^2+1)R_k - 2(k^2-1))/(3(2k+1)) for an explicit product R_k
-that depends only on the largest payment, and the support widens at
+n-1, and we solve it in closed form. When the support ends at n, the
+probability P(n) of the largest number is
+((2k^2+1)R_k - 2(k^2-1))/(3(2k+1)) for an explicit product R_k
+that depends only on the largest payment; otherwise P(n) = 0.
+The support widens at
 thresholds given by the zeros of these functions; for h in {0,1} the
-thresholds are cubic polynomials in k. For S_h(N) = sum_{n=3}^N P(n) and
+thresholds are cubic polynomials in k for each parity. For S_h(N) = sum_{n=3}^N P(n) and
 h in {0,1} we prove S_h(N) = (3/2)^{4/3} N^{1/3} - (1/4) log N - A(h)
 - (3/2) tau(1-tau) + O(N^{-1/3}), where tau in [0,1) is the relative
 position of N in its block, and we determine the next term. The constant
@@ -53,7 +57,7 @@ decimals (computer-assisted interval evaluation of proved error bounds).
 The case h = 1 is Project Euler Problem 1012, which is cited; its solvers
 may have obtained parts of the h = 1 results, and no priority is claimed
 for that case. NOT claimed: a closed form, irrationality or transcendence
-of the constants; the negative PSLQ searches are evidence only. Values of
+of the constants; the negative PSLQ searches do not exclude a closed form. Values of
 S_1(N) are deliberately not published. Unrefereed; no proof-assistant
 verification.
 

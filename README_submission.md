@@ -5,6 +5,7 @@ Title: Parity Rock--Paper--Scissors Games and the Alper Constant
 Author: Alper Ferudun. Affiliation: Mercury Software GmbH.
 English unrefereed preprint; version 1.0; manuscript date 5 October 2026.
 License: CC BY 4.0. Primary category math.OC; secondary math.CA.
+Review status: Author reviewed; no independent peer review is claimed.
 Suggested site path: /papers/parity-rps-alper-constant/ (PDF as paper.pdf).
 Code and data: https://github.com/AlperTheKing/alper-constant
 
@@ -16,6 +17,9 @@ main.tex is standalone and has an embedded bibliography.
 references.bib contains matching reusable citation metadata and is not
 required to compile this standalone source. Build with
 `latexmk -pdf main.tex` (fig_equilibrium.pdf must be next to main.tex).
+If latexmk's Perl runtime is unavailable, run `pdflatex -interaction=nonstopmode
+-halt-on-error main.tex` until the references and labels are stable
+(normally two or three passes). Copy the resulting main.pdf to paper.pdf.
 
 The paper studies the games G_n(h) in which a win with the number m pays
 2m - h, 0 <= h < 2. The claims are: uniqueness, closed form and transition
@@ -76,9 +80,10 @@ latexmk 4.88).
 
 Measured times on the preparation machine: each certificate about 3 s;
 research checks under one minute each; C++ table 11 s with all 128
-logical processors; verify_paper.py 139 s. Assertions must remain
+logical processors in the preparation run; verify_paper.py 122.3 s in
+the review run (1,118,462 assertions). Assertions must remain
 enabled. Finite checks do not replace the written proofs.
 
-No DOI, Zenodo record or site page exists for this paper at local
-preparation. Review the manuscript before publishing; never announce a
-reserved DOI as a public release.
+The reviewed revision is published in the public GitHub repository
+https://github.com/AlperTheKing/alper-constant (5 October 2026). No DOI or Zenodo release
+is asserted here; verify the actual public record before announcing it.

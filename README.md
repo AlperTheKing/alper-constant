@@ -29,13 +29,16 @@ The Alper constant is the Euler-type constant of the game with h = 0:
 
     𝒜 = lim (κ N_K^{1/3} − ¼ log N_K − S(N_K)),   κ = (3/2)^{4/3},
 
-along the block ends N_K. Its first 80 decimals, certified with Arb ball
-arithmetic, are
+along the block ends N_K. Its value correctly rounded to 80 decimal
+places, certified with Arb ball arithmetic, is
 
-    𝒜 = 1.77717998790542318852801821627634156242557103207026437429288159344562194194456353…
+    𝒜 ≈ 1.77717998790542318852801821627634156242557103207026437429288159344562194194456353
 
-For h = 1 the same construction gives
-𝒜(1) = 1.64641765344056003385448411598581328630299683869991753007336025510008825020074857…
+For h = 1 the same construction gives, also rounded to 80 decimal places,
+𝒜(1) ≈ 1.64641765344056003385448411598581328630299683869991753007336025510008825020074857.
+
+Review status: **Author reviewed**. This is an unrefereed preprint; no
+independent peer review or proof-assistant verification is claimed.
 
 ## Reproduction
 

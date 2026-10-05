@@ -6,7 +6,14 @@
 \usepackage{microtype}
 \usepackage{graphicx}
 \usepackage{booktabs}
+\usepackage{placeins}
 \usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+\hypersetup{
+  pdftitle={Parity Rock-Paper-Scissors Games and the Alper Constant},
+  pdfauthor={Alper Ferudun},
+  pdfsubject={Unrefereed mathematical preprint},
+  pdfkeywords={Nash equilibrium, zero-sum game, asymptotic expansion, Alper constant}
+}
 \newtheorem{theorem}{Theorem}[section]
 \newtheorem{lemma}[theorem]{Lemma}
 \newtheorem{corollary}[theorem]{Corollary}
@@ -38,12 +45,13 @@ $0\le h<2$ is fixed. For $h=1$ this is the game of Problem~1012 of
 Project Euler; for $h=0$ the payment is proportional to the winning
 number. For every $h$ outside an explicit countable set we prove that the
 game has a unique equilibrium, supported on $2k+1$ consecutive numbers
-ending at $n$ or $n-1$, and we solve it in closed form. The probability
-$P(n)$ of the largest number is
+ending at $n$ or $n-1$, and we solve it in closed form. When the support
+ends at $n$, the probability $P(n)$ of the largest number is
 $\bigl((2k^2+1)R_k-2(k^2-1)\bigr)/\bigl(3(2k+1)\bigr)$ for an explicit
-product $R_k$ that depends only on the largest payment, and the support
+product $R_k$ that depends only on the largest payment; otherwise $P(n)=0$.
+The support
 widens at thresholds given by the zeros of these functions; for
-$h\in\{0,1\}$ the thresholds are cubic polynomials in $k$. For
+$h\in\{0,1\}$ the thresholds are cubic polynomials in $k$ for each parity. For
 $S_h(N)=\sum_{n=3}^{N}P(n)$ and $h\in\{0,1\}$ we prove
 $S_h(N)=(3/2)^{4/3}N^{1/3}-\tfrac14\log N-\Alp(h)-\tfrac32\tau(1-\tau)
 +O(N^{-1/3})$, where $\tau\in[0,1)$ is the relative position of $N$ in its
@@ -82,20 +90,22 @@ Euler~\cite{PE}, and a solution is described in~\cite{ES}.
 the simplest member, and the one whose constant we call the Alper
 constant.
 \end{itemize}
-Let $P(n)$ be the probability that the equilibrium of $G_n(h)$ assigns to
-the largest number $n$, and put
+Whenever the equilibrium is unique, let $P(n)$ be the probability that
+it assigns to the largest number $n$, and put
 \[
 S_h(N)=\sum_{n=3}^{N}P(n).
 \]
+In particular, these quantities are unambiguous for $h\notin\mathcal E$,
+where the exceptional set $\mathcal E$ is defined below.
 
-Solving $G_n(h)$ numerically for moderate $n$ suggests three patterns.
-The equilibrium always plays an odd number of consecutive numbers. Its
-width grows by two at isolated values of $n$. The ratio $S_h(N)/N^{1/3}$
-increases, but very slowly: for $h=0$ it is $1.330$ at $N=10^3$ and
+Solving $G_n(h)$ numerically for moderate $n$ and generic $h$ suggests
+that the equilibrium plays an odd number of consecutive numbers and
+that its width grows by two at isolated values of $n$. Sampled ratios
+$S_0(N)/N^{1/3}$ approach their limit slowly: the ratio is $1.330$ at $N=10^3$ and
 $1.613$ at $N=10^5$, while its limit turns out to be
-$(3/2)^{4/3}\approx1.7171$. The results below explain all three
-observations for the whole family. They also isolate the constant that
-governs the slow approach.
+$(3/2)^{4/3}\approx1.7171$. We prove the support and transition laws
+for every $h\notin\mathcal E$, and the asymptotic formulas for
+$h\in\{0,1\}$. The latter isolate the constant that governs the slow approach.
 
 Throughout, $\log$ is the natural logarithm, $\gamma$ is Euler's
 constant and $c_j=\binom{2j}{j}4^{-j}$. For $k\ge1$ and real $y$ put
@@ -146,8 +156,8 @@ $S_h(N)-\kappa N^{1/3}+\frac14\log N$ sweeps from about $-\Alp(h)$ down to
 about $-\Alp(h)-\frac38$ and back. At the ends of the blocks, where $P$
 vanishes and $\tau=0$, the oscillation disappears.
 
-\emph{The Alper constant.} The constant $\Alp(h)$ is the exact analogue
-of Euler's constant. The harmonic numbers satisfy
+\emph{The Alper constant.} The constant $\Alp(h)$ is an Euler-type
+constant. The harmonic numbers satisfy
 $H_N-\log N\to\gamma$; here, along the ends $N_K=t_{K+1}(h)-1$ of the
 blocks,
 \[
@@ -158,27 +168,28 @@ We define the \emph{Alper constant} as the constant of the simplest
 member, $h=0$:
 \[
 \begin{aligned}
-\Alp=\Alp(0)=1.&7771799879054231885280182162763415624255\\
-&7103207026437429288159344562194194456353\ldots
+\Alp=\Alp(0)\approx1.&7771799879054231885280182162763415624255\\
+&7103207026437429288159344562194194456353
 \end{aligned}
 \]
 For the Project Euler game,
 \[
 \begin{aligned}
-\Alp(1)=1.&6464176534405600338544841159858132863029\\
-&9683869991753007336025510008825020074857\ldots
+\Alp(1)\approx1.&6464176534405600338544841159858132863029\\
+&9683869991753007336025510008825020074857
 \end{aligned}
 \]
 Section~\ref{sec:constant} expresses both constants as rapidly computable
-series and as integral-series, and explains how the $80$ decimal places
-above are certified.
+series and as integral-series, and certifies that the values above are
+correctly rounded to $80$ decimal places.
 
 The case $h=1$ is a Project Euler problem, and its solvers may have
 obtained parts of our results for it, including the closed form and the
 first-order asymptotic formula; we make no priority claim for this case.
-To our knowledge, the family $G_n(h)$ for $h\ne1$, the transition law for
-general $h$, the rigorous proofs of the asymptotic formulas, the
-second-order term, the Alper constant and the certified digits are new. Section~\ref{sec:game}
+The contributions developed here include the family $G_n(h)$, its
+transition law for general $h$, proofs of the asymptotic formulas for
+$h\in\{0,1\}$, the second-order term, the Alper constant and the
+certified digits. Section~\ref{sec:game}
 sets up the games, Section~\ref{sec:support} shows that the supports are
 intervals, and Section~\ref{sec:interval} solves the equilibrium
 equations on an interval of odd length. Section~\ref{sec:structure}
@@ -270,10 +281,11 @@ $\{a,\dots,b\}$ with $b\ge n-1\ge2$. A single number $b\ge2$ is not an
 equilibrium, because $b-1$ beats it and receives $2b-2-h>0$.
 \end{proof}
 
-The support has odd size; this is proved in Proposition~\ref{prop:odd}.
+For $h\notin\mathcal E$ the support has odd size, as proved in
+Proposition~\ref{prop:odd}.
 For the payments $1,3,5,\dots$ of $h=1$ there is a short argument modulo
-$2$, but for general $h$ the parity of the support follows from the
-explicit solution of the next section.
+$2$, but for general nonexceptional $h$ the parity of the support follows
+from the explicit solution of the next section.
 
 \section{The equilibrium on an interval of odd length}\label{sec:interval}
 
@@ -609,16 +621,48 @@ $0<\vartheta_k<\frac12$. Unwinding the definition of $t_k(h)$,
 For even $k$, $t_k(h)$ equals $t_k(0)$ when $h<1-2\vartheta_k$ and
 $t_k(1)$ when $h>1-2\vartheta_k$. For odd $k$, $t_k(0)=t_k(1)$, and
 $t_k(h)$ equals this common value when $h<2-2\vartheta_k$ and exceeds it
-by one when $h>2-2\vartheta_k$. Numerically $\vartheta_k$ decreases like
-$\frac3{8k}$ ($\vartheta_2=0.1458$, $\vartheta_{10}=0.0372$,
-$\vartheta_{400}=0.00094$), so $\mathcal E$ accumulates only at $1$ and
-$2$, and for every fixed $h\notin\mathcal E$ the thresholds eventually
-agree with those of $h=0$ (if $h<1$) or of $h=1$ (if $h\ge1$). For
-$h\in\mathcal E$ uniqueness fails: if $\beta_k+\frac h2=m\in\mathbb Z$,
-letting $h$ tend to this value from both sides in
-Theorem~\ref{thm:structure} shows that the interval solutions with
-supports $\{m-2k+1,\dots,m-1\}$ and $\{m-2k,\dots,m-2\}$ are both
-equilibria of $G_{m-1}(h)$, since limits of equilibria are equilibria.
+by one when $h>2-2\vartheta_k$. In fact,
+\[
+\vartheta_k=\frac3{8k}+O(k^{-3}).
+\]
+To prove this, retain $U$, $G$ and $x_0=k(4k^2-1)/6$ from the proof of
+Lemma~\ref{lem:root}, and put $V=[-k/2,k/2]$. Then
+$\lambda_k=\int_V(x_0+t)^{-1}\,dt$. Both sets are symmetric, have
+measure $k$ and lie in $[-k,k]$. Expanding the integrands, with the
+odd moments cancelling, gives
+\[
+G(x_0)-\lambda_k
+=\frac{\int_Ut^2\,dt-\int_Vt^2\,dt}{x_0^3}
+  +O\!\left(\frac{k^5}{x_0^5}\right)
+=\frac{k(k^2-1)}{4x_0^3}+O\!\left(\frac{k^5}{x_0^5}\right).
+\]
+Here $\int_Ut^2\,dt=k(4k^2-3)/12$ and $\int_Vt^2\,dt=k^3/12$.
+Uniformly for $x_0\le x\le x_0+1/2$, symmetry also gives
+$-G'(x)=kx_0^{-2}(1+O(k^{-3}))$. Since
+$G(x_0+\vartheta_k)=\lambda_k$ and $0<\vartheta_k<1/2$, the mean value
+theorem yields
+\[
+\vartheta_k=\frac{k^2-1}{4x_0}\bigl(1+O(k^{-3})\bigr)
+  +O\!\left(\frac{k^4}{x_0^3}\right)
+=\frac3{8k}+O(k^{-3}).
+\]
+Consequently $\mathcal E$ accumulates only at $1$ and $2$, and for every
+fixed $h\notin\mathcal E$ the thresholds eventually agree with those
+of $h=0$ (if $h<1$) or of $h=1$ (if $h\ge1$). For illustration,
+$\vartheta_2\approx0.1458$, $\vartheta_{10}\approx0.0372$ and
+$\vartheta_{400}\approx0.00094$; monotonicity is not needed.
+
+For $h\in\mathcal E$ uniqueness fails for at least one game: if
+$\beta_k+\frac h2=m\in\mathbb Z$, let nonexceptional parameters tend
+to $h$ from both sides in Theorem~\ref{thm:structure}. The limiting
+vectors are supported on $\{m-2k+1,\dots,m-1\}$ and
+$\{m-2k,\dots,m-2\}$. They are equilibria of
+$G_{m-1}(h)$ because the equilibrium inequalities are continuous.
+They are distinct: the first assigns probability
+$P_{k-1}(\beta_k-1)>0$ to $m-1$, while the second assigns zero.
+The strict inequality follows from Lemma~\ref{lem:root}, which gives
+$\beta_k-1>\beta_{k-1}$ for $k\ge3$; for $k=2$ use
+$P_1(y)>0$ for $y>2$. Their convex combinations are also equilibria.
 \end{remark}
 
 \section{Block sums}\label{sec:blocks}
@@ -935,8 +979,8 @@ parabola $\frac32\tau(1-\tau)$ of Theorem~B has to be added.
 
 The series~\eqref{eq:series} has rational terms
 $e_k=B_k-\frac32+\frac3{4k}$, which Proposition~\ref{prop:blocksum}
-evaluates exactly, and it converges like $\sum k^{-2}$ with alternating
-signs. Its leading part sums in closed form: since
+evaluates exactly, and it converges absolutely. Its leading terms
+alternate and sum in closed form: since
 $\sum_k(-1)^{k+1}k^{-2}=\frac{\pi^2}{12}$, we have
 $\sum_k(-1)^{k+h}\frac3{8k^2}=(-1)^{h+1}\frac{\pi^2}{32}$. Thus
 \[
@@ -964,15 +1008,15 @@ explicit integrals.
 \subsection*{Certified digits}
 
 \begin{theorem}\label{thm:digits}
-The $80$ decimal places of $\Alp=\Alp(0)$ and of $\Alp(1)$ printed in the
-introduction are correct. Moreover
+The values of $\Alp=\Alp(0)$ and of $\Alp(1)$ printed in the
+introduction are correctly rounded to $80$ decimal places. Moreover
 \[
 \begin{aligned}
-\sum_{k\ge1}e_k(0)=0.&2570980377977675524213691301515475449990\\
-&4607575030187421494741375405402095091354\ldots
+\sum_{k\ge1}e_k(0)\approx0.&2570980377977675524213691301515475449990\\
+&4607575030187421494741375405402095091354
 \end{aligned}
 \]
-with all printed digits correct.
+is correctly rounded to $80$ decimal places.
 \end{theorem}
 
 \begin{proof}[Method]
@@ -1018,7 +1062,7 @@ arithmetic with tolerance $10^{-85}$ and coefficients of absolute value
 at most $1000$. The same search was run for $\Alp(1)$, for
 $\Alp(h)-\frac14\log\frac32$ and for $\sum_ke_k(h)$, and also against the
 subset $1,\gamma,\log2,\log3,\pi^2,\zeta(3)$. No relation was found.
-This is evidence, not a proof, that $\Alp$ has no simple closed form.
+These finite searches do not establish the absence of a closed form.
 
 Two facts make $\Alp$ less arbitrary than an empirical constant. First,
 the block ends $t_k(0)$ are exact polynomials in $k$ for each parity,
@@ -1029,11 +1073,10 @@ rational block sums and the constants $\gamma$ and $\log\frac32$.
 \subsection*{How the constants were found}
 
 The constant $\Alp(1)$ was seen first, numerically. Exact block sums give
-$S_1(10^m)$ to many digits for $m\le20$. After $\kappa N^{1/3}$ is
-removed, the remainder still drifts like $-\frac14\log N$. After this
-drift is also removed, it oscillates inside each block, and the parabola
-$\frac32\tau(1-\tau)$ accounts for the oscillation; what is left clusters
-near $1.6464$. The proofs did not use the special payments $2m-1$ except
+$S_1(10^m)$ to many digits for $m\le20$. The defect
+$\kappa N^{1/3}-\frac14\log N-S_1(N)$ oscillates inside each block.
+Subtracting $\frac32\tau(1-\tau)$ from this defect leaves values
+clustering near $1.6464$. The proofs did not use the special payments $2m-1$ except
 in the explicit form of the thresholds, which led to the family $G_n(h)$
 and to its simplest member $h=0$, whose constant is the Alper constant.
 Theorem~\ref{thm:asymptotics} and the certified evaluations turned these
@@ -1061,7 +1104,7 @@ $c(\tau)=-\frac14\bigl(1-3\tau(1-\tau)(4\tau-1)\bigr)$ predicted by
 Theorem~\ref{thm:asymptotics}. The difference between the two columns is
 $O(1/K)$, and it is below $10^{-5}$ for $m\ge15$.
 
-\begin{table}[ht]
+\begin{table}[!htb]
 \centering
 \small
 \begin{tabular}{rllrr}
@@ -1096,24 +1139,26 @@ limit of the ratio is $\kappa=1.7170713\ldots$}
 \label{tab:S}
 \end{table}
 
-\begin{figure}[ht]
+\begin{figure}[!htb]
 \centering
 \includegraphics[width=\textwidth]{fig_equilibrium.pdf}
 \caption{The game $G_n(0)$. (a) The probability $P(n)$ of the largest
 number for $3\le n\le500$; the grey lines mark the zeros $n=t_k(0)-1$.
-Within each block $P$ increases, and it drops to $0$ when the support
-widens. (b) $S_0(N)/N^{1/3}$ at $N=10^m$ for $3\le m\le20$ (dots), the
+Within the positive part of each block $P$ increases. It drops to $0$
+one step before the support widens. (b) $S_0(N)/N^{1/3}$ at $N=10^m$
+for $3\le m\le20$ (dots), the
 limit $\kappa$ (dashed), and the curve $\kappa-(\frac14\log N+\Alp)/N^{1/3}$.}
 \label{fig:equilibrium}
 \end{figure}
 
+\FloatBarrier
 \section{Concluding remarks}\label{sec:remarks}
 
 The structure of the equilibria rests on two features of the payments:
 they grow linearly, which makes the payoff differences in
 Lemma~\ref{lem:rows} positive and the neighbour equations solvable, and
 the largest payment enters only through $y=n-\frac h2$. For
-$h\notin\mathcal E\cup\{0,1\}$, Remark~\ref{rem:exceptional} indicates
+$h\notin\mathcal E\cup\{0,1\}$, Remark~\ref{rem:exceptional} proves
 that the thresholds eventually coincide with those of $h=0$ or $h=1$;
 the proof of Theorem~\ref{thm:asymptotics} should then give the same
 first-order formula, with a constant $\Alp(h)$ defined by the actual
@@ -1124,8 +1169,10 @@ We list some questions that we have not answered.
 \begin{enumerate}
 \item Does $\Alp$ have a closed form in classical constants? Is it
 irrational?
-\item How does $\Alp(h)$ depend on $h$? Its definition changes at the
-points of $\mathcal E$, which accumulate at $1$ and $2$.
+\item Can the asymptotic definition of $\Alp(h)$ be extended to every
+$h\notin\mathcal E$, and how does the resulting function depend on
+$h$? The thresholds change at the points of $\mathcal E$, which
+accumulate at $1$ and $2$.
 \item What is the nature of the series $\sum_jb_{j,\pm}k^{-j}$ in
 Table~\ref{tab:coefficients}? Its coefficients grow quickly, and we
 expect it to diverge.
@@ -1140,10 +1187,12 @@ computation of the tables and the figure, and the programs that certify
 $\Alp$ and $\Alp(1)$ are included in the source archive and at
 \url{https://github.com/AlperTheKing/alper-constant}. AI assistance was
 used in the derivations, in writing and running the verification code,
-and in preparing this manuscript. The results have not been refereed or
+and in preparing this manuscript. Review status: Author reviewed.
+The results have not been refereed or
 verified in a proof assistant. This is an unrefereed preprint.
 
 \begin{thebibliography}{9}
+\small
 \raggedright
 
 \bibitem{DLMF}

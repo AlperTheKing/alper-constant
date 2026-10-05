@@ -5,6 +5,7 @@
     "0.037218",
     "0.000937496"
   ],
+  "root_offset_k3_error_max_2_to_400": "0.333989511483",
   "structure_theorem_exact_n_le": 600,
   "independent_lp_n_le_150_max_abs_diff": {
     "0.0": 2.7795821200271575e-13,
@@ -85,8 +86,8 @@
     "20": 1.863133699162899e-07
   },
   "status": "PASS",
-  "assertions": 1117664,
-  "seconds": 138.8,
+  "assertions": 1118462,
+  "seconds": 124.5,
   "python": "3.12.4",
   "mpmath": "1.3.0",
   "sympy": "1.14.0",
