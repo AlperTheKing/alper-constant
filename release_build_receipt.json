@@ -103,7 +103,7 @@
   "file_sha256": {
     "main.tex": "27f15dc7c6582446e023a5cae363459f7498c470befd594844b0d639bd68395b",
     "paper.pdf": "043ab16757feb9162fb9fd29eb44c82f6ed3f933950931f3ab7b36289131688f",
-    "README.md": "c771d62056a61363617b78bb4251591e41742d546c3700cdc85de6249da9513b",
+    "README.md": "be3bbc509d014fb7a6c4a06ac6e9c470c933e29ed251955a57afa851f83455fa",
     "README_submission.md": "0748ad7920211f3ed25b8489079a38b13f94c11efa04d9ce784587a11733e8d0",
     "submission_metadata.md": "bbdd394f15527be92c6574b63b892392da104f5e8b03b792a5bd322b1a0a4bd1",
     "verification_report.md": "977361b0e19628cfee66c20872f5938caabb09adc497c16a6076ddde31fe5a48",
@@ -133,6 +133,11 @@
       "file": "submission_metadata.md",
       "date": "2026-10-05",
       "change": "Publication status and Release scope updated after version 1.1 was pushed to GitHub; no other file of the reviewed package changed"
+    },
+    {
+      "file": "README.md",
+      "date": "2026-10-08",
+      "change": "Added a link to the paper's page on eulersolve.org; no other file of the reviewed package changed"
     }
   ],
   "public_release_github": {

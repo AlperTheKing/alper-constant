@@ -3,7 +3,7 @@
 Code, certificates and paper for
 
 **Parity Rock–Paper–Scissors Games and the Alper Constant**
-Alper Ferudun, 5 October 2026 ([paper.pdf](paper.pdf)).
+Alper Ferudun, 5 October 2026 ([paper.pdf](paper.pdf); [paper page on eulersolve.org](https://eulersolve.org/papers/parity-rps-alper-constant/)).
 
 ## The games
 
